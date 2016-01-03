@@ -34,6 +34,7 @@ const readJson = function(filePath) {
 
 /*
  * Load EJS and transform to HTML.
+ * @public
  * @param {string} filePath - Absolute path to the requested file.
  * @param {string} srcPath - Absolute path to the source folder.
  * @param {string} distPath - Absolute path to the export folder.
