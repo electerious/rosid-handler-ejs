@@ -11,9 +11,8 @@
     "handler",
     "transform",
     "compile",
-    "js",
-    "babel",
-    "uglifyjs"
+    "ejs",
+    "html"
   ],
   "license": "MIT",
   "homepage": "http://github.com/electerious/rosid-handler-ejs",
