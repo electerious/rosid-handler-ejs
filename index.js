@@ -45,23 +45,20 @@ module.exports = function(filePath, srcPath, distPath, route, next) {
 
 	filePath = renameExtension(filePath, 'ejs')
 
-	let folderPath   = path.dirname(filePath),
-	    savePath     = renameExtension(filePath.replace(srcPath, distPath), 'html'),
-	    relativePath = path.relative(srcPath, filePath),
-	    globalsPath  = path.join(process.cwd(), 'globals.json'),
-	    dataPath     = path.join(folderPath, '_data.json')
+	let savePath     = renameExtension(filePath.replace(srcPath, distPath), 'html'),
+	    dataPath     = path.join(process.cwd(), 'data.json'),
+	    relativePath = path.relative(srcPath, filePath)
 
-	let globals     = readJson(globalsPath),
-	    current     = path.parse(relativePath),
-	    locals      = readJson(dataPath)[current.name],
-	    environment = process.env
+	let current     = path.parse(relativePath),
+	    environment = process.env,
+	    dataJSON    = readJson(dataPath),
+	    globalData  = dataJSON['*'] || {},
+	    pageData    = dataJSON[current.name] || {}
 
-	let data = {
-		globals,
-		locals,
+	let data = Object.assign({}, globalData, pageData, {
 		current,
 		environment
-	}
+	})
 
 	async.waterfall([
 
