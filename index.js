@@ -1,9 +1,9 @@
 'use strict'
 
-let path  = require('path'),
-    fs    = require('fs'),
-    async = require('async'),
-    ejs   = require('./lib/ejs')
+let path  = require('path')
+let fs    = require('fs')
+let async = require('async')
+let ejs   = require('./lib/ejs')
 
 /*
  * Rename the extension of a file in a path.
@@ -45,15 +45,15 @@ module.exports = function(filePath, srcPath, distPath, route, next) {
 
 	filePath = renameExtension(filePath, 'ejs')
 
-	let savePath     = renameExtension(filePath.replace(srcPath, distPath), 'html'),
-	    dataPath     = path.join(process.cwd(), 'data.json'),
-	    relativePath = path.relative(srcPath, filePath)
+	let savePath     = renameExtension(filePath.replace(srcPath, distPath), 'html')
+	let dataPath     = path.join(process.cwd(), 'data.json')
+	let relativePath = path.relative(srcPath, filePath)
 
-	let current     = path.parse(relativePath),
-	    environment = process.env,
-	    dataJSON    = readJson(dataPath),
-	    globalData  = dataJSON['*'] || {},
-	    pageData    = dataJSON[current.name] || {}
+	let current     = path.parse(relativePath)
+	let environment = process.env
+	let dataJSON    = readJson(dataPath)
+	let globalData  = dataJSON['*'] || {}
+	let pageData    = dataJSON[current.name] || {}
 
 	let data = Object.assign({}, globalData, pageData, {
 		current,
