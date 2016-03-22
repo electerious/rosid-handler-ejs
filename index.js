@@ -77,3 +77,12 @@ module.exports = function(filePath, srcPath, distPath, route, next) {
 	})
 
 }
+
+/**
+ * Attach an array to the function, which contains a list of
+ * extensions used by the handler. The array will be used by Rosid for caching purposes.
+ */
+module.exports.cache = [
+	'.ejs',
+	'.json'
+]
