@@ -5,7 +5,7 @@
     "Tobias Reich <tobias@electerious.com>"
   ],
   "description": "Load EJS and transform to HTML.",
-  "main": "index.js",
+  "main": "src/index.js",
   "keywords": [
     "rosid",
     "handler",
@@ -20,6 +20,10 @@
     "type": "git",
     "url": "https://github.com/electerious/rosid-handler-ejs.git"
   },
+  "files": [
+    "src",
+    "LICENSE.md"
+  ],
   "dependencies": {
     "async": "^1.5.2",
     "ejs": "^2.4.1"

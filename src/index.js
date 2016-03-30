@@ -3,7 +3,7 @@
 let path  = require('path')
 let fs    = require('fs')
 let async = require('async')
-let ejs   = require('./lib/ejs')
+let ejs   = require('./ejs')
 
 /*
  * Rename the extension of a file in a path.
