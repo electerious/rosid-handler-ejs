@@ -3,7 +3,7 @@
 const assert = require('chai').assert
 const ejs    = require('./../src/ejs')
 
-describe('postcss()', function() {
+describe('ejs()', function() {
 
 	it('should return an empty string when called without parameters', function() {
 
