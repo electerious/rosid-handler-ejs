@@ -1,6 +1,6 @@
 'use strict'
 
-let ejs = require('ejs')
+const ejs = require('ejs')
 
 /*
  * Transform EJS to HTML.
@@ -13,7 +13,7 @@ module.exports = function(filePath, str, data, next) {
 
 	try {
 
-		let result = ejs.render(str, data, {
+		const result = ejs.render(str, data, {
 			filename: filePath
 		})
 

@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "async": "^1.5.2",
-    "ejs": "^2.4.1"
+    "ejs": "^2.4.1",
+    "rename-extension": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",

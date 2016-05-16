@@ -1,23 +1,10 @@
 'use strict'
 
-let path  = require('path')
-let fs    = require('fs')
-let async = require('async')
-let ejs   = require('./ejs')
-
-/*
- * Rename the extension of a file in a path.
- * @param {string} filePath - Path to a file.
- * @param {string} fileExt - New extension of the file.
- * @returns {string} filePath - Path ending with the new fileExt.
- */
-const renameExtension = function(filePath, fileExt) {
-
-	let parsedPath = path.parse(filePath)
-
-	return parsedPath.dir + path.sep + parsedPath.name + '.' + fileExt
-
-}
+const path   = require('path')
+const fs     = require('fs')
+const rename = require('rename-extension')
+const async  = require('async')
+const ejs    = require('./ejs')
 
 /*
  * Read and parse a JSON-file.
@@ -26,7 +13,7 @@ const renameExtension = function(filePath, fileExt) {
  */
 const readJson = function(filePath) {
 
-	let data = fs.readFileSync(filePath)
+	const data = fs.readFileSync(filePath)
 
 	return JSON.parse(data)
 
@@ -43,19 +30,19 @@ const readJson = function(filePath) {
  */
 module.exports = function(filePath, srcPath, distPath, route, next) {
 
-	filePath = renameExtension(filePath, 'ejs')
+	filePath = rename(filePath, 'ejs')
 
-	let savePath     = renameExtension(filePath.replace(srcPath, distPath), 'html')
-	let dataPath     = path.join(process.cwd(), 'data.json')
-	let relativePath = path.relative(srcPath, filePath)
+	const savePath     = rename(filePath.replace(srcPath, distPath), 'html')
+	const dataPath     = path.join(process.cwd(), 'data.json')
+	const relativePath = path.relative(srcPath, filePath)
 
-	let current     = path.parse(relativePath)
-	let environment = process.env
-	let dataJSON    = readJson(dataPath)
-	let globalData  = dataJSON['*'] || {}
-	let pageData    = dataJSON[current.name] || {}
+	const current     = path.parse(relativePath)
+	const environment = process.env
+	const dataJSON    = readJson(dataPath)
+	const globalData  = dataJSON['*'] || {}
+	const pageData    = dataJSON[current.name] || {}
 
-	let data = Object.assign({}, globalData, pageData, {
+	const data = Object.assign({}, globalData, pageData, {
 		current,
 		environment
 	})
