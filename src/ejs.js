@@ -5,24 +5,21 @@ const ejs = require('ejs')
 /*
  * Transform EJS to HTML.
  * @public
- * @param {string} filePath - Path to the EJS file.
- * @param {string} str - EJS.
- * @param {function} next - The callback that handles the response. Receives the following properties: err, html.
+ * @param {?string} filePath - Path to the EJS file being rendered.
+ * @param {?string} str - Contents of a EJS file.
+ * @param {?Object} data - EJS data used to render the file.
  */
-module.exports = function(filePath, str, data, next) {
+module.exports = function(filePath, str, data) {
 
-	try {
+	// Do nothing when called with an empty string
+	if (str==null || str==='') return Promise.resolve('')
 
-		const result = ejs.render(str, data, {
+	return new Promise((resolve, reject) => {
+
+		resolve(ejs.render(str, data, {
 			filename: filePath
-		})
+		}))
 
-		next(null, result)
-
-	} catch (err) {
-
-		next(err, null)
-
-	}
+	})
 
 }

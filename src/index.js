@@ -1,23 +1,10 @@
 'use strict'
 
-const path   = require('path')
-const fs     = require('fs')
-const rename = require('rename-extension')
-const async  = require('async')
-const ejs    = require('./ejs')
-
-/*
- * Read and parse a JSON-file.
- * @param {string} filePath - Path to a valid JSON file.
- * @returns {object} JSON
- */
-const readJson = function(filePath) {
-
-	const data = fs.readFileSync(filePath)
-
-	return JSON.parse(data)
-
-}
+const path      = require('path')
+const fs        = require('fs')
+const denodeify = require('denodeify')
+const rename    = require('rename-extension')
+const ejs       = require('./ejs')
 
 /*
  * Load EJS and transform to HTML.
@@ -30,38 +17,56 @@ const readJson = function(filePath) {
  */
 module.exports = function(filePath, srcPath, distPath, route, next) {
 
-	filePath = rename(filePath, 'ejs')
+	let savePath     = null
+	let dataPath     = null
+	let relativePath = null
 
-	const savePath     = rename(filePath.replace(srcPath, distPath), 'html')
-	const dataPath     = path.join(process.cwd(), 'data.json')
-	const relativePath = path.relative(srcPath, filePath)
+	let data = null
 
-	const current     = path.parse(relativePath)
-	const environment = process.env
-	const dataJSON    = readJson(dataPath)
-	const globalData  = dataJSON['*'] || {}
-	const pageData    = dataJSON[current.name] || {}
+	Promise.resolve()
 
-	const data = Object.assign({}, globalData, pageData, {
-		current,
-		environment
-	})
+	// Prepare file paths
+	.then(() => {
 
-	async.waterfall([
-
-		(next)      => fs.readFile(filePath, 'utf8', next),
-		(str, next) => ejs(filePath, str, data, next)
-
-	], (err, str) => {
-
-		if (err!=null) {
-			next(err, null, null)
-			return false
-		}
-
-		next(null, str, savePath)
+		filePath     = rename(filePath, 'ejs')
+		savePath     = rename(filePath.replace(srcPath, distPath), 'html')
+		dataPath     = path.resolve(process.cwd(), './data.json')
+		relativePath = path.relative(srcPath, filePath)
 
 	})
+
+	// Get the contents of the ejs data
+	.then(() => denodeify(fs.readFile)(dataPath, 'utf8'))
+
+	// Process ejs data
+	.then((dataStr) => {
+
+		const current     = path.parse(relativePath)
+		const environment = process.env
+
+		const dataJSON    = JSON.parse(dataStr)
+		const globalData  = dataJSON['*'] || {}
+		const pageData    = dataJSON[current.name] || {}
+
+		data = Object.assign({}, globalData, pageData, {
+			current,
+			environment
+		})
+
+	})
+
+	// Get the contents of the file
+	.then(() => denodeify(fs.readFile)(filePath, 'utf8'))
+
+	// Process file
+	.then((str) => ejs(filePath, str, data))
+
+	// Return processed data and catch errors
+	// Avoid .catch as we don't want to catch errors of the callback
+	.then(
+		(str) => next(null, str, savePath),
+		(err) => next(err, null, null)
+	)
 
 }
 
