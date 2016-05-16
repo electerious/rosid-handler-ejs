@@ -23,23 +23,24 @@ module.exports = function(filePath, srcPath, distPath, route, next) {
 
 	let data = null
 
-	Promise.resolve()
+	Promise.resolve().then(() => {
 
-	// Prepare file paths
-	.then(() => {
+		// Prepare file paths
 
 		filePath     = rename(filePath, 'ejs')
 		savePath     = rename(filePath.replace(srcPath, distPath), 'html')
 		dataPath     = path.resolve(process.cwd(), './data.json')
 		relativePath = path.relative(srcPath, filePath)
 
-	})
+	}).then(() => {
 
-	// Get the contents of the ejs data
-	.then(() => denodeify(fs.readFile)(dataPath, 'utf8'))
+		// Get the contents of the ejs data
 
-	// Process ejs data
-	.then((dataStr) => {
+		return denodeify(fs.readFile)(dataPath, 'utf8')
+
+	}).then((dataStr) => {
+
+		// Process ejs data
 
 		const current     = path.parse(relativePath)
 		const environment = process.env
@@ -53,19 +54,26 @@ module.exports = function(filePath, srcPath, distPath, route, next) {
 			environment
 		})
 
-	})
+	}).then(() => {
 
-	// Get the contents of the file
-	.then(() => denodeify(fs.readFile)(filePath, 'utf8'))
+		// Get the contents of the file
 
-	// Process file
-	.then((str) => ejs(filePath, str, data))
+		return denodeify(fs.readFile)(filePath, 'utf8')
 
-	// Return processed data and catch errors
-	// Avoid .catch as we don't want to catch errors of the callback
-	.then(
+	}).then((str) => {
+
+		// Process file
+
+		return ejs(filePath, str, data)
+
+	}).then(
+
+		// Return processed data and catch errors
+		// Avoid .catch as we don't want to catch errors of the callback
+
 		(str) => next(null, str, savePath),
 		(err) => next(err, null, null)
+
 	)
 
 }
