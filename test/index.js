@@ -25,7 +25,7 @@ describe('index()', function() {
 
 	})
 
-	it('should return an error when called with an invalid filePath', function(done) {
+	it('should return an error when called with a invalid filePath', function(done) {
 
 		index(null, '/src', '/dist', null, (err, str, savePath) => {
 
