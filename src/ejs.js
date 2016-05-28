@@ -5,8 +5,8 @@ const ejs = require('ejs')
 /*
  * Transform EJS to HTML.
  * @public
- * @param {?string} filePath - Path to the EJS file being rendered.
- * @param {?string} str - Contents of a EJS file.
+ * @param {?String} filePath - Path to the EJS file being rendered.
+ * @param {?String} str - Contents of a EJS file.
  * @param {?Object} data - EJS data used to render the file.
  */
 module.exports = function(filePath, str, data) {
