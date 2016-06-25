@@ -45,9 +45,9 @@ module.exports = function(filePath, srcPath, distPath, route, next) {
 		const current     = path.parse(relativePath)
 		const environment = process.env
 
-		const dataJSON    = JSON.parse(dataStr)
-		const globalData  = dataJSON['*'] || {}
-		const pageData    = dataJSON[current.name] || {}
+		const dataJSON   = JSON.parse(dataStr)
+		const globalData = dataJSON['*'] || {}
+		const pageData   = dataJSON[current.name] || {}
 
 		data = Object.assign({}, globalData, pageData, {
 			current,
