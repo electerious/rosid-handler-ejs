@@ -21,14 +21,17 @@ module.exports = function(filePath, srcPath, distPath, route) {
 	let dataPath     = null
 	let relativePath = null
 
+	const fileExt = (route.args && route.args.fileExt) || 'ejs'
+	const saveExt = (route.args && route.args.saveExt) || 'html'
+
 	let data = null
 
 	return Promise.resolve().then(() => {
 
 		// Prepare file paths
 
-		filePath     = rename(filePath, 'ejs')
-		savePath     = rename(filePath.replace(srcPath, distPath), 'html')
+		filePath     = rename(filePath, fileExt)
+		savePath     = rename(filePath.replace(srcPath, distPath), saveExt)
 		dataPath     = path.resolve(process.cwd(), './data.json')
 		relativePath = path.relative(srcPath, filePath)
 

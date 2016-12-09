@@ -6,15 +6,20 @@ const assert = require('chai').assert
 const temp   = require('temp').track()
 const index  = require('./../src/index')
 
-let file = null
-let data = null
+let ejsFile = null
+let xmlFile = null
+let data    = null
 
 describe('index()', function() {
 
 	before(function() {
 
-		file = temp.openSync({
+		ejsFile = temp.openSync({
 			suffix: '.ejs'
+		})
+
+		xmlFile = temp.openSync({
+			suffix: '.xml'
 		})
 
 		data = {
@@ -55,7 +60,7 @@ describe('index()', function() {
 
 	it('should load EJS and transform it to HTML when everything specified', function() {
 
-		return index(file.path, '/src', '/dist', {}).then(({ data, savePath }) => {
+		return index(ejsFile.path, '/src', '/dist', {}).then(({ data, savePath }) => {
 
 			assert.isString(savePath)
 			assert.strictEqual(data, '')
@@ -65,9 +70,37 @@ describe('index()', function() {
 
 	})
 
+	it('should load XML and transform it to HTML when custom fileExt specified', function() {
+
+		const route = { args: { fileExt: 'xml' } }
+
+		return index(xmlFile.path, '/src', '/dist', route).then(({ data, savePath }) => {
+
+			assert.isString(savePath)
+			assert.strictEqual(data, '')
+			assert.strictEqual(savePath.substr(-5), '.html')
+
+		})
+
+	})
+
+	it('should load EJS and transform it to XML when custom saveExt specified', function() {
+
+		const route = { args: { saveExt: 'xml' } }
+
+		return index(ejsFile.path, '/src', '/dist', route).then(({ data, savePath }) => {
+
+			assert.isString(savePath)
+			assert.strictEqual(data, '')
+			assert.strictEqual(savePath.substr(-4), '.xml')
+
+		})
+
+	})
+
 	it('should load EJS and transform it to HTML when distPath not specified', function() {
 
-		return index(file.path, '/src', null, {}).then(({ data, savePath }) => {
+		return index(ejsFile.path, '/src', null, {}).then(({ data, savePath }) => {
 
 			assert.isString(savePath)
 			assert.strictEqual(data, '')
