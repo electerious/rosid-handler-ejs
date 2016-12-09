@@ -65,7 +65,7 @@ describe('index()', function() {
 
 	})
 
-	it('should load EJS and transform it to EJS when distPath not specified', function() {
+	it('should load EJS and transform it to HTML when distPath not specified', function() {
 
 		return index(file.path, '/src', null, null).then(({ data, savePath }) => {
 
