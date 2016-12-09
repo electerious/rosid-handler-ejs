@@ -16,7 +16,8 @@ npm install rosid-handler-ejs
 const ejs = require('rosid-handler-ejs')
 
 ejs('/src/index.ejs', '/src', '/dist', {}).then(({ data, savePath }) => {})
-ejs('/src/index.html', '/src', '/dist', {}).then(({ data, savePath }) => {})
+ejs('/src/index.xml', '/src', '/dist', { args: { fileExt: 'xml' } }).then(({ data, savePath }) => {})
+ejs('/src/index.ejs', '/src', '/dist', { args: { saveExt: 'xml' } }).then(({ data, savePath }) => {})
 ```
 
 ## Parameters
