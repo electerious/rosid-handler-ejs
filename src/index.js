@@ -46,7 +46,7 @@ module.exports = function(filePath, srcPath, distPath, route) {
 		// Process ejs data
 
 		const current     = path.parse(relativePath)
-		const environment = process.env
+		const environment = distPath==null ? 'dev' : 'prod'
 
 		const dataJSON   = JSON.parse(dataStr)
 		const globalData = dataJSON['*'] || {}
