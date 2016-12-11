@@ -20,6 +20,28 @@ ejs('/src/index.xml', '/src', '/dist', { args: { fileExt: 'xml' } }).then(({ dat
 ejs('/src/index.ejs', '/src', '/dist', { args: { saveExt: 'xml' } }).then(({ data, savePath }) => {})
 ```
 
+## Example
+
+Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes array](https://github.com/electerious/Rosid#routes). `rosid-handler-ejs` will transform all matching EJS files in your source folder to HTML.
+
+```json
+{
+	"name"    : "EJS",
+	"path"    : "[^_]*.{html,ejs}*",
+	"handler" : "rosid-handler-ejs"
+}
+```
+
+```js
+// index.ejs
+<h1>Hello <%= 'World' %></h1>
+```
+
+```js
+// index.html (output)
+<h1>Hello World</h1>
+```
+
 ## Parameters
 
 - `filePath` `{String}` Absolute path to the requested file.
