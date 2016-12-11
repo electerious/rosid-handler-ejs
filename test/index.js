@@ -6,21 +6,15 @@ const assert = require('chai').assert
 const temp   = require('temp').track()
 const index  = require('./../src/index')
 
-const newFile = function(content, suffix) {
+const newFile = function(suffix) {
 
-	const file = temp.openSync({ suffix })
-
-	fs.writeFileSync(file.path, content)
-
-	return file
+	return temp.openSync({ suffix })
 
 }
 
 const data = {
 	path: path.resolve(process.cwd(), './data.json')
 }
-
-fs.writeFileSync(data.path, '{}')
 
 describe('index()', function() {
 
@@ -60,7 +54,7 @@ describe('index()', function() {
 
 	it('should load EJS and transform it to HTML when everything specified', function() {
 
-		const file = newFile('', '.ejs')
+		const file = newFile('.ejs')
 
 		return index(file.path, '/src', '/dist', {}).then(({ data, savePath }) => {
 
@@ -74,7 +68,7 @@ describe('index()', function() {
 
 	it('should load XML and transform it to HTML when custom fileExt specified', function() {
 
-		const file  = newFile('', '.xml')
+		const file  = newFile('.xml')
 		const route = { args: { fileExt: 'xml' } }
 
 		return index(file.path, '/src', '/dist', route).then(({ data, savePath }) => {
@@ -89,7 +83,7 @@ describe('index()', function() {
 
 	it('should load EJS and transform it to XML when custom saveExt specified', function() {
 
-		const file  = newFile('', '.ejs')
+		const file  = newFile('.ejs')
 		const route = { args: { saveExt: 'xml' } }
 
 		return index(file.path, '/src', '/dist', route).then(({ data, savePath }) => {
@@ -104,7 +98,7 @@ describe('index()', function() {
 
 	it('should load EJS and transform it to HTML when distPath not specified', function() {
 
-		const file = newFile('', '.ejs')
+		const file = newFile('.ejs')
 
 		return index(file.path, '/src', null, {}).then(({ data, savePath }) => {
 
