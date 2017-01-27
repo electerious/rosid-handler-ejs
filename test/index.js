@@ -8,7 +8,7 @@ const index  = require('./../src/index')
 
 const newFile = function(suffix) {
 
-	return temp.openSync({ suffix })
+	return temp.openSync({ suffix }).path
 
 }
 
@@ -56,7 +56,7 @@ describe('index()', function() {
 
 		const file = newFile('.ejs')
 
-		return index(file.path, '/src', '/dist', {}).then(({ data, savePath }) => {
+		return index(file, '/src', '/dist', {}).then(({ data, savePath }) => {
 
 			assert.isString(savePath)
 			assert.strictEqual(data, '')
@@ -71,7 +71,7 @@ describe('index()', function() {
 		const file  = newFile('.xml')
 		const route = { args: { fileExt: 'xml' } }
 
-		return index(file.path, '/src', '/dist', route).then(({ data, savePath }) => {
+		return index(file, '/src', '/dist', route).then(({ data, savePath }) => {
 
 			assert.isString(savePath)
 			assert.strictEqual(data, '')
@@ -86,7 +86,7 @@ describe('index()', function() {
 		const file  = newFile('.ejs')
 		const route = { args: { saveExt: 'xml' } }
 
-		return index(file.path, '/src', '/dist', route).then(({ data, savePath }) => {
+		return index(file, '/src', '/dist', route).then(({ data, savePath }) => {
 
 			assert.isString(savePath)
 			assert.strictEqual(data, '')
@@ -100,7 +100,7 @@ describe('index()', function() {
 
 		const file = newFile('.ejs')
 
-		return index(file.path, '/src', null, {}).then(({ data, savePath }) => {
+		return index(file, '/src', null, {}).then(({ data, savePath }) => {
 
 			assert.isString(savePath)
 			assert.strictEqual(data, '')
