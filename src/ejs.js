@@ -11,14 +11,15 @@ const ejs = require('ejs')
  */
 module.exports = function(filePath, str, data) {
 
-	// Do nothing when called with an empty string
-	if (str==null || str==='') return Promise.resolve('')
-
 	return new Promise((resolve, reject) => {
 
-		resolve(ejs.render(str, data, {
-			filename: filePath
-		}))
+		// Do nothing when called with an empty string
+		if (str==null || str==='') return resolve('')
+
+		// Render EJS
+		const result = ejs.render(str, data, { filename: filePath })
+
+		resolve(result)
 
 	})
 

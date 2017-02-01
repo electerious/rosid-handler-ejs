@@ -29,8 +29,7 @@
   },
   "dependencies": {
     "denodeify": "^1.2.1",
-    "ejs": "^2.5.5",
-    "rename-extension": "^1.0.4"
+    "ejs": "^2.5.5"
   },
   "devDependencies": {
     "chai": "^3.5.0",

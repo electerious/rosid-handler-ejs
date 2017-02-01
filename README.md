@@ -15,12 +15,12 @@ npm install rosid-handler-ejs
 ```js
 const ejs = require('rosid-handler-ejs')
 
-ejs('/src/index.ejs', '/src', '/dist', {}).then(({ data, savePath }) => {})
-ejs('/src/index.xml', '/src', '/dist', { args: { fileExt: 'xml' } }).then(({ data, savePath }) => {})
-ejs('/src/index.ejs', '/src', '/dist', { args: { saveExt: 'xml' } }).then(({ data, savePath }) => {})
+ejs('/src/index.ejs').then((data) => {})
+ejs('/src/index.xml').then((data) => {})
+ejs('/src/index.ejs', { optimize: true }).then((data) => {})
 ```
 
-## Example
+## Rosid
 
 Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes array](https://github.com/electerious/Rosid#routes). `rosid-handler-ejs` will transform all matching EJS files in your source folder to HTML.
 
@@ -44,13 +44,10 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 
 ## Parameters
 
-- `filePath` `{String}` Absolute path to the requested file.
-- `srcPath` `{String}` Absolute path to the source folder.
-- `distPath` `{?String}` Absolute path to the export folder.
-- `route` `{Object}` The route which matched the request URL.
+- `filePath` `{String}` Absolute path to file.
+- `opts` `{?Object}` Options.
+	- `optimize` `{?Boolean}` - Optimize output. Defaults to `false`.
 
 ## Returns
 
-- `{Promise}({Object})`
-	- `data` `{String|Buffer}` The transformed file content.
-	- `savePath` `{?String}` Where to save the file when compiling.
+- `{Promise}({String|Buffer})` The transformed file content.

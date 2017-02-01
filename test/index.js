@@ -6,27 +6,45 @@ const assert = require('chai').assert
 const temp   = require('temp').track()
 const index  = require('./../src/index')
 
-const newFile = function(suffix) {
+const newFile = function(content, suffix) {
 
-	return temp.openSync({ suffix }).path
+	const file = temp.openSync({ suffix })
+
+	fs.writeFileSync(file.path, content)
+
+	return file.path
 
 }
 
-const data = {
-	path: path.resolve(process.cwd(), './data.json')
-}
+const dataPath = path.resolve(process.cwd(), './data.json')
 
 describe('index()', function() {
 
 	before(function() {
 
-		fs.writeFileSync(data.path, '{}')
+		fs.writeFileSync(dataPath, '{}')
 
 	})
 
-	it('should return an error when called with an invalid filePath', function() {
+	it('should return an error when called without a filePath', function() {
 
-		return index(null, '/src', '/dist', {}).then(({ data, savePath }) => {
+		return index().then((data) => {
+
+			throw new Error('Returned without error')
+
+		}, (err) => {
+
+			assert.isNotNull(err)
+
+		})
+
+	})
+
+	it('should return an error when called with invalid options', function() {
+
+		const file = newFile('', '.ejs')
+
+		return index(file, '').then((data) => {
 
 			throw new Error('Returned without error')
 
@@ -40,7 +58,7 @@ describe('index()', function() {
 
 	it('should return an error when called with a fictive filePath', function() {
 
-		return index('test.scss', '/src', '/dist', {}).then(({ data, savePath }) => {
+		return index('test.scss').then((data) => {
 
 			throw new Error('Returned without error')
 
@@ -52,59 +70,97 @@ describe('index()', function() {
 
 	})
 
-	it('should load EJS and transform it to HTML when everything specified', function() {
+	it('should return an error when called with invalid EJS', function() {
 
-		const file = newFile('.ejs')
+		const file = newFile('<% + %>', '.ejs')
 
-		return index(file, '/src', '/dist', {}).then(({ data, savePath }) => {
+		return index(file).then((data) => {
 
-			assert.isString(savePath)
-			assert.strictEqual(data, '')
-			assert.strictEqual(savePath.substr(-5), '.html')
+			throw new Error('Returned without error')
 
-		})
+		}, (err) => {
 
-	})
-
-	it('should load XML and transform it to HTML when custom fileExt specified', function() {
-
-		const file  = newFile('.xml')
-		const route = { args: { fileExt: 'xml' } }
-
-		return index(file, '/src', '/dist', route).then(({ data, savePath }) => {
-
-			assert.isString(savePath)
-			assert.strictEqual(data, '')
-			assert.strictEqual(savePath.substr(-5), '.html')
+			assert.isNotNull(err)
 
 		})
 
 	})
 
-	it('should load EJS and transform it to XML when custom saveExt specified', function() {
+	it('should load EJS and transform it to HTML', function() {
 
-		const file  = newFile('.ejs')
-		const route = { args: { saveExt: 'xml' } }
+		const file = newFile('<%= environment %>', '.ejs')
 
-		return index(file, '/src', '/dist', route).then(({ data, savePath }) => {
+		return index(file).then((data) => {
 
-			assert.isString(savePath)
-			assert.strictEqual(data, '')
-			assert.strictEqual(savePath.substr(-4), '.xml')
+			assert.strictEqual(data, 'dev')
 
 		})
 
 	})
 
-	it('should load EJS and transform it to HTML when distPath not specified', function() {
+	it('should load EJS and transform it to optimized HTML when optimization enabled', function() {
 
-		const file = newFile('.ejs')
+		const file = newFile('<%= environment %>', '.ejs')
 
-		return index(file, '/src', null, {}).then(({ data, savePath }) => {
+		return index(file, { optimize: true }).then((data) => {
 
-			assert.isString(savePath)
-			assert.strictEqual(data, '')
-			assert.strictEqual(savePath.substr(-5), '.html')
+			assert.strictEqual(data, 'prod')
+
+		})
+
+	})
+
+	describe('.in()', function() {
+
+		it('should be a function', function() {
+
+			assert.isFunction(index.in)
+
+		})
+
+		it('should return a default extension', function() {
+
+			assert.strictEqual(index.in(), 'ejs')
+
+		})
+
+		it('should return a default extension when called with invalid options', function() {
+
+			assert.strictEqual(index.in(''), 'ejs')
+
+		})
+
+		it('should return a custom extension when called with options', function() {
+
+			assert.strictEqual(index.in({ in: 'xml' }), 'xml')
+
+		})
+
+	})
+
+	describe('.out()', function() {
+
+		it('should be a function', function() {
+
+			assert.isFunction(index.in)
+
+		})
+
+		it('should return a default extension', function() {
+
+			assert.strictEqual(index.out(), 'html')
+
+		})
+
+		it('should return a default extension when called with invalid options', function() {
+
+			assert.strictEqual(index.out(''), 'html')
+
+		})
+
+		it('should return a custom extension when called with options', function() {
+
+			assert.strictEqual(index.out({ out: 'xml' }), 'xml')
 
 		})
 
@@ -122,7 +178,7 @@ describe('index()', function() {
 
 	after(function() {
 
-		fs.unlinkSync(data.path)
+		fs.unlinkSync(dataPath)
 
 	})
 

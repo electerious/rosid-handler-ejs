@@ -3,50 +3,41 @@
 const path      = require('path')
 const fs        = require('fs')
 const denodeify = require('denodeify')
-const rename    = require('rename-extension')
 const ejs       = require('./ejs')
 
 /*
  * Load EJS and transform to HTML.
  * @public
- * @param {String} filePath - Absolute path to the requested file.
- * @param {String} srcPath - Absolute path to the source folder.
- * @param {String} distPath - Absolute path to the export folder.
- * @param {Object} route - The route which matched the request URL.
- * @returns {Promise} Returns the following properties if resolved: {Object}.
+ * @param {String} filePath - Absolute path to file.
+ * @param {?Object} opts - Options.
+ * @returns {Promise} Returns the following properties if resolved: {String}.
  */
-module.exports = function(filePath, srcPath, distPath, route) {
+module.exports = function(filePath, opts) {
 
-	let savePath     = null
-	let dataPath     = null
-	let relativePath = null
-
-	const fileExt = (route.args && route.args.fileExt) || 'ejs'
-	const saveExt = (route.args && route.args.saveExt) || 'html'
-
+	let dataPath = null
 	let data = null
 
 	return Promise.resolve().then(() => {
 
-		// Prepare file paths
+		if (typeof filePath!=='string')           throw new Error(`'filePath' must be a string`)
+		if (typeof opts!=='object' && opts!=null) throw new Error(`'opts' must be undefined, null or an object`)
 
-		filePath     = rename(filePath, fileExt)
-		savePath     = rename(filePath.replace(srcPath, distPath), saveExt)
-		dataPath     = path.resolve(process.cwd(), './data.json')
-		relativePath = path.relative(srcPath, filePath)
+	}).then(() => {
+
+		// Prepare file path
+		dataPath = path.resolve(process.cwd(), './data.json')
 
 	}).then(() => {
 
 		// Get the contents of the ejs data
-
 		return denodeify(fs.readFile)(dataPath, 'utf8')
 
 	}).then((dataStr) => {
 
 		// Process ejs data
 
-		const current     = path.parse(relativePath)
-		const environment = distPath==null ? 'dev' : 'prod'
+		const current     = path.parse(filePath)
+		const environment = (opts!=null && opts.optimize===true) ? 'prod' : 'dev'
 
 		const dataJSON   = JSON.parse(dataStr)
 		const globalData = dataJSON['*'] || {}
@@ -60,31 +51,49 @@ module.exports = function(filePath, srcPath, distPath, route) {
 	}).then(() => {
 
 		// Get the contents of the file
-
 		return denodeify(fs.readFile)(filePath, 'utf8')
 
 	}).then((str) => {
 
 		// Process file
-
 		return ejs(filePath, str, data)
 
 	}).then((str) => {
 
-		return {
-			data     : str,
-			savePath : savePath
-		}
+		return str
 
 	})
 
 }
 
 /**
+ * Tell Rosid with which file extension it should load the file.
+ * @public
+ * @param {?Object} opts - Options.
+ */
+module.exports.in = function(opts) {
+
+	return (opts!=null && opts.in!=null) ? opts.in : 'ejs'
+
+}
+
+/**
+ * Tell Rosid with which file extension it should save the file.
+ * @public
+ * @param {?Object} opts - Options.
+ */
+module.exports.out = function(opts) {
+
+	return (opts!=null && opts.out!=null) ? opts.out : 'html'
+
+}
+
+/**
  * Attach an array to the function, which contains a list of
  * extensions used by the handler. The array will be used by Rosid for caching purposes.
+ * @public
  */
 module.exports.cache = [
-	'.ejs',
+	'.js',
 	'.json'
 ]
