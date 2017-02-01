@@ -52,5 +52,5 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 ## Returns
 
 - `{Promise}({Object})`
-	- `data` `{String | Buffer}` The transformed file content.
+	- `data` `{String|Buffer}` The transformed file content.
 	- `savePath` `{?String}` Where to save the file when compiling.
