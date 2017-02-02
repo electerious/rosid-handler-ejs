@@ -79,6 +79,6 @@ module.exports.out = function(opts) {
  * @public
  */
 module.exports.cache = [
-	'.js',
+	'.ejs',
 	'.json'
 ]
