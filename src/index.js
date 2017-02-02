@@ -1,9 +1,10 @@
 'use strict'
 
-const path      = require('path')
 const fs        = require('fs')
 const denodeify = require('denodeify')
+const findUp    = require('find-up')
 const ejs       = require('./ejs')
+const data      = require('./data')
 
 /*
  * Load EJS and transform to HTML.
@@ -14,9 +15,6 @@ const ejs       = require('./ejs')
  */
 module.exports = function(filePath, opts) {
 
-	let dataPath = null
-	let data = null
-
 	return Promise.resolve().then(() => {
 
 		if (typeof filePath!=='string')           throw new Error(`'filePath' must be a string`)
@@ -24,36 +22,23 @@ module.exports = function(filePath, opts) {
 
 	}).then(() => {
 
-		// Prepare file path
-		dataPath = path.resolve(process.cwd(), './data.json')
+		// Find the data.json file by walking up parent directories
+		return findUp('data.json')
 
-	}).then(() => {
+	}).then((dataPath) => {
 
-		// Get the contents of the ejs data
-		return denodeify(fs.readFile)(dataPath, 'utf8')
+		// Get the data for ejs
+		return data(dataPath, filePath, opts)
 
-	}).then((dataStr) => {
+	}).then((data) => {
 
-		// Process ejs data
+		// Get the contents of the file and pass both data and str to next promise
+		return denodeify(fs.readFile)(filePath, 'utf8').then((str) => ({
+			str,
+			data
+		}))
 
-		const current     = path.parse(filePath)
-		const environment = (opts!=null && opts.optimize===true) ? 'prod' : 'dev'
-
-		const dataJSON   = JSON.parse(dataStr)
-		const globalData = dataJSON['*'] || {}
-		const pageData   = dataJSON[current.name] || {}
-
-		data = Object.assign({}, globalData, pageData, {
-			current,
-			environment
-		})
-
-	}).then(() => {
-
-		// Get the contents of the file
-		return denodeify(fs.readFile)(filePath, 'utf8')
-
-	}).then((str) => {
+	}).then(({ str, data }) => {
 
 		// Process file
 		return ejs(filePath, str, data)

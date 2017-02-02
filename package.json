@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "denodeify": "^1.2.1",
-    "ejs": "^2.5.5"
+    "ejs": "^2.5.5",
+    "find-up": "^2.1.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
