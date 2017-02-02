@@ -12,6 +12,8 @@ npm install rosid-handler-ejs
 
 ## Usage
 
+### API
+
 ```js
 const ejs = require('rosid-handler-ejs')
 
@@ -20,7 +22,7 @@ ejs('/src/index.xml').then((data) => {})
 ejs('/src/index.ejs', { optimize: true }).then((data) => {})
 ```
 
-## Rosid
+### Rosid
 
 Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes array](https://github.com/electerious/Rosid#routes). `rosid-handler-ejs` will transform all matching EJS files in your source folder to HTML.
 
