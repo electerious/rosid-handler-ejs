@@ -22,8 +22,8 @@ module.exports = function(filePath, opts) {
 
 	}).then(() => {
 
-		// Find the data.json file by walking up parent directories
-		return findUp('data.json')
+		// Find the data file by walking up parent directories
+		return findUp([ 'data.js', 'data.json' ])
 
 	}).then((dataPath) => {
 
