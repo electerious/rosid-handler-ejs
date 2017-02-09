@@ -4,7 +4,7 @@
   "authors": [
     "Tobias Reich <tobias@electerious.com>"
   ],
-  "description": "Load EJS and transform to HTML",
+  "description": "Load EJS templates and render them",
   "main": "src/index.js",
   "keywords": [
     "rosid",
