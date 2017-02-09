@@ -1,6 +1,7 @@
 'use strict'
 
-const path = require('path')
+const path            = require('path')
+const requireUncached = require('require-uncached')
 
 /*
  * Loads and parses data for EJS.
@@ -16,7 +17,7 @@ module.exports = function(dataPath, filePath, opts) {
 		const current     = path.parse(filePath)
 		const environment = (opts!=null && opts.optimize===true) ? 'prod' : 'dev'
 
-		const dataJSON   = require(dataPath)
+		const dataJSON   = requireUncached(dataPath)
 		const globalData = dataJSON['*'] || {}
 		const pageData   = dataJSON[current.name] || {}
 

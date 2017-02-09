@@ -30,7 +30,8 @@
   "dependencies": {
     "denodeify": "^1.2.1",
     "ejs": "^2.5.5",
-    "find-up": "^2.1.0"
+    "find-up": "^2.1.0",
+    "require-uncached": "^1.0.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
