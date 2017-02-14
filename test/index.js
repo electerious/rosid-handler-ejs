@@ -35,6 +35,7 @@ describe('index()', function() {
 		}, (err) => {
 
 			assert.isNotNull(err)
+			assert.isDefined(err)
 
 		})
 
@@ -51,6 +52,7 @@ describe('index()', function() {
 		}, (err) => {
 
 			assert.isNotNull(err)
+			assert.isDefined(err)
 
 		})
 
@@ -65,6 +67,7 @@ describe('index()', function() {
 		}, (err) => {
 
 			assert.isNotNull(err)
+			assert.isDefined(err)
 
 		})
 
@@ -81,6 +84,7 @@ describe('index()', function() {
 		}, (err) => {
 
 			assert.isNotNull(err)
+			assert.isDefined(err)
 
 		})
 

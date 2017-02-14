@@ -38,6 +38,7 @@ describe('ejs()', function() {
 		}, (err) => {
 
 			assert.isNotNull(err)
+			assert.isDefined(err)
 
 		})
 
