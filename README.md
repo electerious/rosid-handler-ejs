@@ -53,3 +53,9 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 ## Returns
 
 - `{Promise}({String|Buffer})` The transformed file content.
+
+## Miscellaneous
+
+### Environment
+
+`rosid-handler-ejs` passes a variable called `environment` to your template. `environment` is `prod` when `opts.optimize` is `true` and `dev` when `opts.optimize` is `false`.
