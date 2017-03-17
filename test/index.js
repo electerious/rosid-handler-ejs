@@ -1,30 +1,19 @@
 'use strict'
 
+const os     = require('os')
 const fs     = require('fs')
 const path   = require('path')
 const assert = require('chai').assert
-const temp   = require('temp').track()
+const uuid   = require('uuid/v4')
 const index  = require('./../src/index')
 
-const newFile = function(content, suffix) {
-
-	const file = temp.openSync({ suffix })
-
-	fs.writeFileSync(file.path, content)
-
-	return file.path
-
-}
-
-const dataPath = path.resolve('./data.json')
+const fsify = require('fsify')({
+	cwd        : os.tmpdir(),
+	persistent : false,
+	force      : true
+})
 
 describe('index()', function() {
-
-	before(function() {
-
-		fs.writeFileSync(dataPath, '{}')
-
-	})
 
 	it('should return an error when called without a filePath', function() {
 
@@ -43,16 +32,24 @@ describe('index()', function() {
 
 	it('should return an error when called with invalid options', function() {
 
-		const file = newFile('', '.ejs')
+		const structure = [
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.ejs`
+			}
+		]
 
-		return index(file, '').then((data) => {
+		return fsify(structure).then((structure) => {
+
+			return index(structure[0].name, '')
+
+		}).then((data) => {
 
 			throw new Error('Returned without error')
 
 		}, (err) => {
 
-			assert.isNotNull(err)
-			assert.isDefined(err)
+			assert.strictEqual(`'opts' must be undefined, null or an object`, err.message)
 
 		})
 
@@ -60,7 +57,7 @@ describe('index()', function() {
 
 	it('should return an error when called with a fictive filePath', function() {
 
-		return index('test.scss').then((data) => {
+		return index('test.ejs').then((data) => {
 
 			throw new Error('Returned without error')
 
@@ -75,9 +72,19 @@ describe('index()', function() {
 
 	it('should return an error when called with invalid EJS', function() {
 
-		const file = newFile('<% + %>', '.ejs')
+		const structure = [
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.njk`,
+				contents: '<% + %>'
+			}
+		]
 
-		return index(file).then((data) => {
+		return fsify(structure).then((structure) => {
+
+			return index(structure[0].name)
+
+		}).then((data) => {
 
 			throw new Error('Returned without error')
 
@@ -92,9 +99,19 @@ describe('index()', function() {
 
 	it('should load EJS and transform it to HTML', function() {
 
-		const file = newFile('<%= environment %>', '.ejs')
+		const structure = [
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.njk`,
+				contents: '<%= environment %>'
+			}
+		]
 
-		return index(file).then((data) => {
+		return fsify(structure).then((structure) => {
+
+			return index(structure[0].name)
+
+		}).then((data) => {
 
 			assert.strictEqual(data, 'dev')
 
@@ -102,13 +119,176 @@ describe('index()', function() {
 
 	})
 
+	it('should load EJS from a relative path and transform it to HTML', function() {
+
+		const foldername = uuid()
+		const filename   = `${ uuid() }.ejs`
+
+		const structure = [
+			{
+				type: fsify.DIRECTORY,
+				name: foldername,
+				contents: [
+					{
+						type: fsify.FILE,
+						name: filename,
+						contents: 'value'
+					}
+				]
+			},
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.njk`,
+				contents: `<%= include('./${ foldername }/${ filename }') %>`
+			}
+		]
+
+		return fsify(structure).then((structure) => {
+
+			const relativePath = path.relative(process.cwd(), structure[1].name)
+
+			return index(relativePath)
+
+		}).then((data) => {
+
+			assert.strictEqual(data, structure[0].contents[0].contents)
+
+		})
+
+	})
+
+	it('should load EJS and transform it to HTML with custom global data', function() {
+
+		const structure = [
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.ejs`,
+				contents: '<%= key %>'
+			}
+		]
+
+		const data = { key: 'value' }
+
+		return fsify(structure).then((structure) => {
+
+			return index(structure[0].name, { data })
+
+		}).then((_data) => {
+
+			assert.strictEqual(_data, data.key)
+
+		})
+
+	})
+
+	it('should load EJS and transform it to HTML with external custom global data', function() {
+
+		const data = { key: 'value' }
+
+		const structure = [
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.ejs`,
+				contents: '<%= key %>'
+			},
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.json`,
+				contents: JSON.stringify(data)
+			}
+		]
+
+		return fsify(structure).then((structure) => {
+
+			return index(structure[0].name, { data: structure[1].name })
+
+		}).then((_data) => {
+
+			assert.strictEqual(_data, data.key)
+
+		})
+
+	})
+
 	it('should load EJS and transform it to optimized HTML when optimization enabled', function() {
 
-		const file = newFile('<%= environment %>', '.ejs')
+		const structure = [
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.njk`,
+				contents: '<%= environment %>'
+			}
+		]
 
-		return index(file, { optimize: true }).then((data) => {
+		return fsify(structure).then((structure) => {
+
+			return index(structure[0].name, { optimize: true })
+
+		}).then((data) => {
 
 			assert.strictEqual(data, 'prod')
+
+		})
+
+	})
+
+	it('should load EJS and transform it to HTML with custom data from a JS data file', function() {
+
+		const data = { key: 'value' }
+
+		const filename = uuid()
+
+		const structure = [
+			{
+				type: fsify.FILE,
+				name: `${ filename }.ejs`,
+				contents: '<%= key %>'
+			},
+			{
+				type: fsify.FILE,
+				name: `${ filename }.data.js`,
+				contents: `module.exports = ${ JSON.stringify(data) }`
+			}
+		]
+
+		return fsify(structure).then((structure) => {
+
+			return index(structure[0].name)
+
+		}).then((_data) => {
+
+			assert.strictEqual(_data, data.key)
+
+		})
+
+	})
+
+	it('should load EJS and transform it to HTML with custom data from a JSON data file', function() {
+
+		const data = { key: 'value' }
+
+		const filename = uuid()
+
+		const structure = [
+			{
+				type: fsify.FILE,
+				name: `${ filename }.ejs`,
+				contents: '<%= key %>'
+			},
+			{
+				type: fsify.FILE,
+				name: `${ filename }.data.json`,
+				contents: JSON.stringify(data)
+			}
+		]
+
+		return fsify(structure).then((structure) => {
+
+			return index(structure[0].name)
+
+		}).then((_data) => {
+
+			assert.strictEqual(_data, data.key)
 
 		})
 
@@ -177,12 +357,6 @@ describe('index()', function() {
 			assert.isArray(index.cache)
 
 		})
-
-	})
-
-	after(function() {
-
-		fs.unlinkSync(dataPath)
 
 	})
 

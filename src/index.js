@@ -1,10 +1,11 @@
 'use strict'
 
-const fs        = require('fs')
-const denodeify = require('denodeify')
-const findUp    = require('find-up')
-const ejs       = require('./ejs')
-const data      = require('./data')
+const path       = require('path')
+const fs         = require('fs')
+const locatePath = require('locate-path')
+const pify       = require('pify')
+const ejs        = require('./ejs')
+const data       = require('./data')
 
 /**
  * Load EJS and transform to HTML.
@@ -22,18 +23,33 @@ module.exports = function(filePath, opts) {
 
 	}).then(() => {
 
-		// Find the data file by walking up parent directories
-		return findUp([ 'data.js', 'data.json' ])
+		const fileDir  = path.dirname(filePath)
+		const fileName = path.parse(filePath).name
+
+		// Look for the data in the same directory as filePath
+		const locateDataPath = locatePath([
+			`${ fileName }.data.js`,
+			`${ fileName }.data.json`
+		], {
+			cwd: fileDir
+		})
+
+		// Convert dataPath path to an absolute path
+		return locateDataPath.then((dataPath) => {
+
+			return dataPath==null ? null : path.join(fileDir, dataPath)
+
+		})
 
 	}).then((dataPath) => {
 
 		// Get the data for ejs
-		return data(dataPath, filePath, opts)
+		return data(dataPath, opts)
 
 	}).then((data) => {
 
 		// Get the contents of the file and pass both data and str to next promise
-		return denodeify(fs.readFile)(filePath, 'utf8').then((str) => ({
+		return pify(fs.readFile)(filePath, 'utf8').then((str) => ({
 			str,
 			data
 		}))

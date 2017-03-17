@@ -20,6 +20,8 @@ const ejs = require('rosid-handler-ejs')
 ejs('/src/index.ejs').then((data) => {})
 ejs('/src/index.xml').then((data) => {})
 ejs('/src/index.ejs', { optimize: true }).then((data) => {})
+ejs('/src/index.ejs', { data: { key: 'value' } }).then((data) => {})
+ejs('/src/index.ejs', { data: 'data.json' }).then((data) => {})
 ```
 
 ### Rosid
@@ -46,15 +48,24 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 
 ## Parameters
 
-- `filePath` `{String}` Absolute path to file.
+- `filePath` `{String}` Path to file.
 - `opts` `{?Object}` Options.
 	- `optimize` `{?Boolean}` - Optimize output. Defaults to `false`.
+	- `data` `{?Object|String}` - Data uses to render the template. Defaults to `{}`.
 
 ## Returns
 
 - `{Promise}({String|Buffer})` The transformed file content.
 
 ## Miscellaneous
+
+### Data
+
+The data in `opts.data` will be used to render your template. `opts.data` can either be an object (the data) or a string (path to data file). `rosid-handler-ejs` tries to require the path when a string is specified instead of an object. The path must be absolute or relative to the current working directory.
+
+### Custom data per file
+
+Create a file with the name `filename.data.json` or `filename.data.js` along your `filename.ejs` to add or overwrite data from `opts.data`.
 
 ### Environment
 
