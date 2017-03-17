@@ -16,7 +16,7 @@ const newFile = function(content, suffix) {
 
 }
 
-const dataPath = path.resolve(process.cwd(), './data.json')
+const dataPath = path.resolve('./data.json')
 
 describe('index()', function() {
 
