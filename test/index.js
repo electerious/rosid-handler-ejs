@@ -8,9 +8,7 @@ const uuid   = require('uuid/v4')
 const index  = require('./../src/index')
 
 const fsify = require('fsify')({
-	cwd        : os.tmpdir(),
-	persistent : false,
-	force      : true
+	cwd: os.tmpdir()
 })
 
 describe('index()', function() {
