@@ -25,7 +25,8 @@
   ],
   "scripts": {
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "test": "istanbul cover node_modules/mocha/bin/_mocha"
+    "test": "istanbul cover node_modules/mocha/bin/_mocha",
+    "prepublish": "npm test"
   },
   "dependencies": {
     "ejs": "^2.5.6",
