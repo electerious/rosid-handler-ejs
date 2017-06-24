@@ -26,7 +26,7 @@ ejs('index.ejs', { data: 'data.json' }).then((data) => {})
 
 ### Rosid
 
-Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes array](https://github.com/electerious/Rosid#routes). `rosid-handler-ejs` will transform all matching EJS files in your source folder to HTML.
+Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes array](https://github.com/electerious/Rosid/blob/master/docs/Routes.md). `rosid-handler-ejs` will transform all matching EJS files in your source folder to HTML.
 
 ```json
 {
