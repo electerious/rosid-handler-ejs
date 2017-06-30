@@ -1,7 +1,22 @@
 'use strict'
 
-const path            = require('path')
-const requireUncached = require('require-uncached')
+const path    = require('path')
+const decache = require('decache')
+
+/**
+ * Requires a fresh, uncached module.
+ * @param {String} filePath - File to require.
+ * @returns {*} Required module.
+ */
+const requireUncached = function(filePath) {
+
+	// Force a fresh require by removing module from cache,
+	// including all of its child modules.
+	decache(filePath)
+
+	return require(filePath)
+
+}
 
 /**
  * Loads and parses data for EJS.
