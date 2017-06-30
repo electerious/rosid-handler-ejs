@@ -21,8 +21,7 @@ describe('index()', function() {
 
 		}, (err) => {
 
-			assert.isNotNull(err)
-			assert.isDefined(err)
+			assert.strictEqual(`'filePath' must be a string`, err.message)
 
 		})
 
