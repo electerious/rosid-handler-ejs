@@ -1,11 +1,11 @@
 'use strict'
 
-const path       = require('path')
-const fs         = require('fs')
+const path = require('path')
+const fs = require('fs')
 const locatePath = require('locate-path')
-const pify       = require('pify')
-const ejs        = require('./ejs')
-const data       = require('./data')
+const pify = require('pify')
+const ejs = require('./ejs')
+const data = require('./data')
 
 /**
  * Load EJS and transform to HTML.
@@ -14,20 +14,18 @@ const data       = require('./data')
  * @param {?Object} opts - Options.
  * @returns {Promise} Returns the following properties if resolved: {String}.
  */
-module.exports = function(filePath, opts) {
+module.exports = async function(filePath, opts) {
 
-	return Promise.resolve().then(() => {
+	if (typeof filePath!=='string') throw new Error(`'filePath' must be a string`)
+	if (typeof opts!=='object' && opts!=null) throw new Error(`'opts' must be undefined, null or an object`)
 
-		if (typeof filePath!=='string')           throw new Error(`'filePath' must be a string`)
-		if (typeof opts!=='object' && opts!=null) throw new Error(`'opts' must be undefined, null or an object`)
+	const fileDir = path.dirname(filePath)
+	const fileName = path.parse(filePath).name
 
-	}).then(() => {
-
-		const fileDir  = path.dirname(filePath)
-		const fileName = path.parse(filePath).name
+	const dataPath = await (async () => {
 
 		// Look for the data in the same directory as filePath
-		const locateDataPath = locatePath([
+		const dataPath = await locatePath([
 			`${ fileName }.data.js`,
 			`${ fileName }.data.json`
 		], {
@@ -35,35 +33,14 @@ module.exports = function(filePath, opts) {
 		})
 
 		// Convert dataPath path to an absolute path
-		return locateDataPath.then((dataPath) => {
+		return dataPath==null ? null : path.join(fileDir, dataPath)
 
-			return dataPath==null ? null : path.join(fileDir, dataPath)
+	})()
 
-		})
+	const json = await data(dataPath, opts)
+	const str = await pify(fs.readFile)(filePath, 'utf8')
 
-	}).then((dataPath) => {
-
-		// Get the data for ejs
-		return data(dataPath, opts)
-
-	}).then((data) => {
-
-		// Get the contents of the file and pass both data and str to next promise
-		return pify(fs.readFile)(filePath, 'utf8').then((str) => ({
-			str,
-			data
-		}))
-
-	}).then(({ str, data }) => {
-
-		// Process file
-		return ejs(filePath, str, data)
-
-	}).then((str) => {
-
-		return str
-
-	})
+	return ejs(filePath, str, json)
 
 }
 

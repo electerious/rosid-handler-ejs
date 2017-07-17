@@ -10,18 +10,12 @@ const ejs = require('ejs')
  * @param {?Object} data - EJS data used to render the file.
  * @returns {Promise} Returns the following properties if resolved: {String}.
  */
-module.exports = function(filePath, str, data) {
+module.exports = async function(filePath, str, data) {
 
-	return new Promise((resolve, reject) => {
+	if (str==null || str==='') return ''
 
-		// Do nothing when called with an empty string
-		if (str==null || str==='') return resolve('')
-
-		// Render EJS
-		const result = ejs.render(str, data, { filename: filePath })
-
-		resolve(result)
-
+	return ejs.render(str, data, {
+		filename: filePath
 	})
 
 }

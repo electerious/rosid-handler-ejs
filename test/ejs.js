@@ -1,33 +1,28 @@
 'use strict'
 
 const assert = require('chai').assert
-const ejs    = require('./../src/ejs')
+const ejs = require('./../src/ejs')
 
 describe('ejs()', function() {
 
-	it('should return an empty string when called without parameters', function() {
+	it('should return an empty string when called without parameters', async function() {
 
-		return ejs(null, null, null).then((result) => {
+		const result = await ejs(null, null, null)
 
-			assert.strictEqual(result, '')
-
-		})
+		assert.strictEqual(result, '')
 
 	})
 
-	it('should return an empty string when called with an empty EJS string', function() {
+	it('should return an empty string when called with an empty EJS string', async function() {
 
 		const input = ``
+		const result = await ejs(null, input, null)
 
-		return ejs(null, input, null).then((result) => {
-
-			assert.strictEqual(result, '')
-
-		})
+		assert.strictEqual(result, input)
 
 	})
 
-	it('should return an error when called with incorrect EJS', function() {
+	it('should return an error when called with incorrect EJS', async function() {
 
 		const input = `<%= test %>`
 
@@ -44,30 +39,24 @@ describe('ejs()', function() {
 
 	})
 
-	it('should return HTML when called with valid EJS', function() {
+	it('should return HTML when called with valid EJS', async function() {
 
 		const input = `<%= test %>`
 		const data  = { test: 42 }
+		const result = await ejs(null, input, data)
 
-		return ejs(null, input, data).then((result) => {
-
-			assert.isString(result)
-			assert.include(result, data.test)
-
-		})
+		assert.isString(result)
+		assert.include(result, data.test)
 
 	})
 
-	it('should return HTML when called with valid EJS, but without data', function() {
+	it('should return HTML when called with valid EJS, but without data', async function() {
 
 		const input = `test`
+		const result = await ejs(null, input, null)
 
-		return ejs(null, input, null).then((result) => {
-
-			assert.isString(result)
-			assert.include(result, input)
-
-		})
+		assert.isString(result)
+		assert.include(result, input)
 
 	})
 

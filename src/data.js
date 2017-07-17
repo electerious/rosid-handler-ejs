@@ -1,6 +1,6 @@
 'use strict'
 
-const path    = require('path')
+const path = require('path')
 const decache = require('decache')
 
 /**
@@ -25,37 +25,33 @@ const requireUncached = function(filePath) {
  * @param {?Object} opts - Options.
  * @returns {Promise} Returns the following properties if resolved: {Object}.
  */
-module.exports = function(dataPath, opts) {
+module.exports = async function(dataPath, opts) {
 
-	return new Promise((resolve, reject) => {
+	const environment = (opts!=null && opts.optimize===true) ? 'prod' : 'dev'
 
-		const environment = (opts!=null && opts.optimize===true) ? 'prod' : 'dev'
+	const globalData = (() => {
 
-		const globalData = (() => {
+		const hasData = opts!=null && opts.data!=null
+		if (hasData===false) return {}
 
-			const hasData = opts!=null && opts.data!=null
-			if (hasData===false) return {}
+		const mustRequire = typeof opts.data==='string'
+		if (mustRequire===true) return requireUncached(path.resolve(opts.data))
 
-			const mustRequire = typeof opts.data==='string'
-			if (mustRequire===true) return requireUncached(path.resolve(opts.data))
+		return opts.data
 
-			return opts.data
+	})()
 
-		})()
+	const localData = (() => {
 
-		const localData = (() => {
+		const hasData = dataPath!=null
+		if (hasData===false) return {}
 
-			const hasData = dataPath!=null
-			if (hasData===false) return {}
+		return requireUncached(dataPath)
 
-			return requireUncached(dataPath)
+	})()
 
-		})()
-
-		resolve(Object.assign({}, globalData, localData, {
-			environment
-		}))
-
+	return Object.assign({}, globalData, localData, {
+		environment
 	})
 
 }
