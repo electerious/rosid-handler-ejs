@@ -19,7 +19,7 @@ const requireUncached = function(filePath) {
 }
 
 /**
- * Loads and parses data for EJS.
+ * Loads and parses data.
  * @public
  * @param {String} dataPath - Path to the data JSON.
  * @param {?Object} opts - Options.
