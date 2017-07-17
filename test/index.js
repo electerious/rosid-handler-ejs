@@ -72,8 +72,8 @@ describe('index()', function() {
 		const structure = [
 			{
 				type: fsify.FILE,
-				name: `${ uuid() }.njk`,
 				contents: '<% + %>'
+				name: `${ uuid() }.ejs`,
 			}
 		]
 
@@ -99,8 +99,8 @@ describe('index()', function() {
 		const structure = [
 			{
 				type: fsify.FILE,
-				name: `${ uuid() }.njk`,
 				contents: '<%= environment %>'
+				name: `${ uuid() }.ejs`,
 			}
 		]
 
@@ -135,7 +135,7 @@ describe('index()', function() {
 			},
 			{
 				type: fsify.FILE,
-				name: `${ uuid() }.njk`,
+				name: `${ uuid() }.ejs`,
 				contents: `<%= include('./${ foldername }/${ filename }') %>`
 			}
 		]
@@ -212,8 +212,8 @@ describe('index()', function() {
 		const structure = [
 			{
 				type: fsify.FILE,
-				name: `${ uuid() }.njk`,
 				contents: '<%= environment %>'
+				name: `${ uuid() }.ejs`,
 			}
 		]
 
