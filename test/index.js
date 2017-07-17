@@ -91,6 +91,23 @@ describe('index()', function() {
 
 	})
 
+	it('should load empty EJS and transform it to HTML', async function() {
+
+		const structure = [
+			{
+				type: fsify.FILE,
+				name: `${ uuid() }.ejs`,
+				contents: ''
+			}
+		]
+
+		const file = (await fsify(structure))[0].name
+		const result = await index(file)
+
+		assert.strictEqual(result, structure[0].contents)
+
+	})
+
 	it('should load EJS and transform it to HTML', async function() {
 
 		const structure = [
