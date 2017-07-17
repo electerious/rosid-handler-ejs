@@ -15,7 +15,7 @@ describe('ejs()', function() {
 
 	it('should return an empty string when called with an empty EJS string', async function() {
 
-		const input = ``
+		const input = ''
 		const result = await ejs(null, input, null)
 
 		assert.strictEqual(result, input)
@@ -24,7 +24,7 @@ describe('ejs()', function() {
 
 	it('should return an error when called with incorrect EJS', async function() {
 
-		const input = `<%= test %>`
+		const input = '<%= test %>'
 
 		return ejs(null, input, null).then((result) => {
 
@@ -41,7 +41,7 @@ describe('ejs()', function() {
 
 	it('should return HTML when called with valid EJS', async function() {
 
-		const input = `<%= test %>`
+		const input = '<%= test %>'
 		const data  = { test: 42 }
 		const result = await ejs(null, input, data)
 
@@ -52,7 +52,7 @@ describe('ejs()', function() {
 
 	it('should return HTML when called with valid EJS, but without data', async function() {
 
-		const input = `test`
+		const input = 'test'
 		const result = await ejs(null, input, null)
 
 		assert.isString(result)

@@ -72,7 +72,7 @@ describe('index()', function() {
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.ejs`,
-				contents: `<% + %>`
+				contents: '<% + %>'
 			}
 		]
 
@@ -97,7 +97,7 @@ describe('index()', function() {
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.ejs`,
-				contents: `<%= environment %>`
+				contents: '<%= environment %>'
 			}
 		]
 
@@ -121,7 +121,7 @@ describe('index()', function() {
 					{
 						type: fsify.FILE,
 						name: fileName,
-						contents: `value`
+						contents: 'value'
 					}
 				]
 			},
@@ -148,7 +148,7 @@ describe('index()', function() {
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.ejs`,
-				contents: `<%= key %>`
+				contents: '<%= key %>'
 			}
 		]
 
@@ -167,7 +167,7 @@ describe('index()', function() {
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.ejs`,
-				contents: `<%= key %>`
+				contents: '<%= key %>'
 			},
 			{
 				type: fsify.FILE,
@@ -189,7 +189,7 @@ describe('index()', function() {
 			{
 				type: fsify.FILE,
 				name: `${ uuid() }.ejs`,
-				contents: `<%= environment %>`
+				contents: '<%= environment %>'
 			}
 		]
 
@@ -209,12 +209,12 @@ describe('index()', function() {
 			{
 				type: fsify.FILE,
 				name: `${ fileName }.ejs`,
-				contents: `<%= key %>`
+				contents: '<%= key %>'
 			},
 			{
 				type: fsify.FILE,
 				name: `${ fileName }.data.js`,
-				contents: `module.exports = ${ JSON.stringify(data) }`
+				contents: 'module.exports = ${ JSON.stringify(data) }'
 			}
 		]
 
@@ -234,7 +234,7 @@ describe('index()', function() {
 			{
 				type: fsify.FILE,
 				name: `${ fileName }.ejs`,
-				contents: `<%= key %>`
+				contents: '<%= key %>'
 			},
 			{
 				type: fsify.FILE,
