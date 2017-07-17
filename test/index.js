@@ -214,7 +214,7 @@ describe('index()', function() {
 			{
 				type: fsify.FILE,
 				name: `${ fileName }.data.js`,
-				contents: 'module.exports = ${ JSON.stringify(data) }'
+				contents: `module.exports = ${ JSON.stringify(data) }`
 			}
 		]
 
