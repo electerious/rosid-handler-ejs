@@ -1,9 +1,8 @@
 'use strict'
 
-const path = require('path')
 const fs = require('fs')
-const locatePath = require('locate-path')
 const pify = require('pify')
+const locate = require('./locate')
 const ejs = require('./ejs')
 const data = require('./data')
 
@@ -19,24 +18,7 @@ module.exports = async function(filePath, opts) {
 	if (typeof filePath!=='string') throw new Error(`'filePath' must be a string`)
 	if (typeof opts!=='object' && opts!=null) throw new Error(`'opts' must be undefined, null or an object`)
 
-	const fileDir = path.dirname(filePath)
-	const fileName = path.parse(filePath).name
-
-	const dataPath = await (async () => {
-
-		// Look for the data in the same directory as filePath
-		const dataPath = await locatePath([
-			`${ fileName }.data.js`,
-			`${ fileName }.data.json`
-		], {
-			cwd: fileDir
-		})
-
-		// Convert dataPath path to an absolute path
-		return dataPath==null ? null : path.join(fileDir, dataPath)
-
-	})()
-
+	const dataPath = await locate(filePath)
 	const json = await data(dataPath, opts)
 	const str = await pify(fs.readFile)(filePath, 'utf8')
 
