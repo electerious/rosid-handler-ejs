@@ -14,7 +14,7 @@ describe('index()', function() {
 
 	it('should return an error when called without a filePath', async function() {
 
-		return index().then((data) => {
+		return index().then((result) => {
 
 			throw new Error('Returned without error')
 
@@ -35,7 +35,7 @@ describe('index()', function() {
 			}
 		])
 
-		return index(structure[0].name, '').then((data) => {
+		return index(structure[0].name, '').then((result) => {
 
 			throw new Error('Returned without error')
 
@@ -49,7 +49,7 @@ describe('index()', function() {
 
 	it('should return an error when called with a fictive filePath', async function() {
 
-		return index(`${ uuid() }.ejs`).then((data) => {
+		return index(`${ uuid() }.ejs`).then((result) => {
 
 			throw new Error('Returned without error')
 
@@ -72,7 +72,7 @@ describe('index()', function() {
 			}
 		])
 
-		return index(structure[0].name).then((data) => {
+		return index(structure[0].name).then((result) => {
 
 			throw new Error('Returned without error')
 
