@@ -11,7 +11,7 @@ const data = require('./data')
  * @public
  * @param {String} filePath - Absolute path to file.
  * @param {?Object} opts - Options.
- * @returns {Promise} Returns the following properties if resolved: {String}.
+ * @returns {Promise<String>} HTML.
  */
 module.exports = async function(filePath, opts) {
 

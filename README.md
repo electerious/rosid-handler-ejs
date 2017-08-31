@@ -55,7 +55,7 @@ Add the following object to your `rosidfile.json`, `rosidfile.js` or [routes arr
 
 ## Returns
 
-- `{Promise}({String|Buffer})` The transformed file content.
+- `{Promise<String|Buffer>}` The transformed file content.
 
 ## Miscellaneous
 

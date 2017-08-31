@@ -23,7 +23,7 @@ const requireUncached = function(filePath) {
  * @public
  * @param {String} dataPath - Path to the data JSON.
  * @param {?Object} opts - Options.
- * @returns {Promise} Returns the following properties if resolved: {Object}.
+ * @returns {Promise<Object>} Data.
  */
 module.exports = async function(dataPath, opts) {
 

@@ -7,7 +7,7 @@ const locatePath = require('locate-path')
  * Look for data.
  * @public
  * @param {?String} filePath - Path to the file being rendered.
- * @returns {Promise} Returns the following properties if resolved: {?String}.
+ * @returns {Promise<?String>} Path to the data file.
  */
 module.exports = async function(filePath) {
 
