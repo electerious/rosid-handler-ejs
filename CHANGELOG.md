@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 ### Fixed
 
 - Assert parameter order in tests
+- Don't cache JS and JSON files
 
 ## [8.0.2] - 2017-08-08
 
