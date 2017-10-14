@@ -1,7 +1,7 @@
 'use strict'
 
 const path = require('path')
-const decache = require('decache')
+const stealthyRequire = require('stealthy-require')
 
 /**
  * Requires a fresh, uncached module.
@@ -10,11 +10,17 @@ const decache = require('decache')
  */
 const requireUncached = function(filePath) {
 
+	// Create a shallow copy of the array
+	const initialChildren = module.children.slice()
+
 	// Force a fresh require by removing module from cache,
 	// including all of its child modules.
-	decache(filePath)
+	const requiredModule = stealthyRequire(require.cache, () => require(filePath))
 
-	return require(filePath)
+	// Reset children to avoid a memory leak when repeatedly requiring fresh modules
+	module.children = initialChildren
+
+	return requiredModule
 
 }
 
