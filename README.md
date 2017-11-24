@@ -15,13 +15,13 @@ npm install rosid-handler-ejs
 ### API
 
 ```js
-const ejs = require('rosid-handler-ejs')
+const handler = require('rosid-handler-ejs')
 
-ejs('index.ejs').then((data) => {})
-ejs('index.xml').then((data) => {})
-ejs('index.ejs', { optimize: true }).then((data) => {})
-ejs('index.ejs', { data: { key: 'value' } }).then((data) => {})
-ejs('index.ejs', { data: 'data.json' }).then((data) => {})
+handler('index.ejs').then((data) => {})
+handler('index.xml').then((data) => {})
+handler('index.ejs', { optimize: true }).then((data) => {})
+handler('index.ejs', { data: { key: 'value' } }).then((data) => {})
+handler('index.ejs', { data: 'data.json' }).then((data) => {})
 ```
 
 ### Rosid
