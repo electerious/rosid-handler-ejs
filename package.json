@@ -30,7 +30,6 @@
   "dependencies": {
     "ejs": "^2.5.7",
     "locate-path": "^2.0.0",
-    "pify": "^3.0.0",
     "stealthy-require": "^1.1.1"
   },
   "devDependencies": {
