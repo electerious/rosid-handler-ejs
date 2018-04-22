@@ -15,8 +15,8 @@ const data = require('./data')
  */
 module.exports = async function(filePath, opts) {
 
-	if (typeof filePath!=='string') throw new Error(`'filePath' must be a string`)
-	if (typeof opts!=='object' && opts!=null) throw new Error(`'opts' must be undefined, null or an object`)
+	if (typeof filePath !== 'string') throw new Error(`'filePath' must be a string`)
+	if (typeof opts !== 'object' && opts != null) throw new Error(`'opts' must be undefined, null or an object`)
 
 	const dataPath = await locate(filePath)
 	const json = await data(dataPath, opts)
@@ -34,7 +34,7 @@ module.exports = async function(filePath, opts) {
  */
 module.exports.in = function(opts) {
 
-	return (opts!=null && opts.in!=null) ? opts.in : '.ejs'
+	return (opts != null && opts.in != null) ? opts.in : '.ejs'
 
 }
 
@@ -46,7 +46,7 @@ module.exports.in = function(opts) {
  */
 module.exports.out = function(opts) {
 
-	return (opts!=null && opts.out!=null) ? opts.out : '.html'
+	return (opts != null && opts.out != null) ? opts.out : '.html'
 
 }
 
