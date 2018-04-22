@@ -28,16 +28,16 @@
     "test": "nyc node_modules/mocha/bin/_mocha"
   },
   "dependencies": {
-    "ejs": "^2.5.7",
+    "ejs": "^2.5.9",
     "locate-path": "^2.0.0",
     "stealthy-require": "^1.1.1"
   },
   "devDependencies": {
     "chai": "^4.1.2",
     "coveralls": "^3.0.0",
-    "fsify": "^2.0.3",
-    "mocha": "^4.0.0",
-    "nyc": "^11.2.1",
-    "uuid": "^3.1.0"
+    "fsify": "^2.0.4",
+    "mocha": "^5.1.1",
+    "nyc": "^11.7.1",
+    "uuid": "^3.2.1"
   }
 }
