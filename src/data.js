@@ -1,6 +1,7 @@
 'use strict'
 
 const path = require('path')
+const requireData = require('require-data')
 const continuousStealthyRequire = require('continuous-stealthy-require')
 
 /**
@@ -14,29 +15,38 @@ module.exports = async function(dataPath, opts) {
 
 	const environment = (opts != null && opts.optimize === true) ? 'prod' : 'dev'
 
-	const globalData = (() => {
+	const defaultData = {}
+
+	const globalData = (async () => {
 
 		const hasData = opts != null && opts.data != null
 		if (hasData === false) return {}
 
 		const mustRequire = typeof opts.data === 'string'
-		if (mustRequire === true) return continuousStealthyRequire(path.resolve(opts.data))
+		if (mustRequire === true) return requireData(path.resolve(opts.data), continuousStealthyRequire)
 
 		return opts.data
 
 	})()
 
-	const localData = (() => {
+	const localData = (async () => {
 
 		const hasData = dataPath != null
 		if (hasData === false) return {}
 
-		return continuousStealthyRequire(dataPath)
+		return requireData(dataPath, continuousStealthyRequire)
 
 	})()
 
-	return Object.assign({}, globalData, localData, {
+	const additionalData = {
 		environment
-	})
+	}
+
+	return Object.assign(
+		defaultData,
+		await globalData,
+		await localData,
+		additionalData
+	)
 
 }
