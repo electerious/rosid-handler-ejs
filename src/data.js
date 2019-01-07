@@ -13,9 +13,9 @@ const continuousStealthyRequire = require('continuous-stealthy-require')
  */
 module.exports = async function(dataPath, opts) {
 
-	const environment = (opts != null && opts.optimize === true) ? 'prod' : 'dev'
-
-	const defaultData = {}
+	const defaultData = {
+		environment: (opts != null && opts.optimize === true) ? 'prod' : 'dev'
+	}
 
 	const globalData = (async () => {
 
@@ -38,15 +38,10 @@ module.exports = async function(dataPath, opts) {
 
 	})()
 
-	const additionalData = {
-		environment
-	}
-
 	return Object.assign(
 		defaultData,
 		await globalData,
-		await localData,
-		additionalData
+		await localData
 	)
 
 }
