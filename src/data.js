@@ -8,18 +8,18 @@ const continuousStealthyRequire = require('continuous-stealthy-require')
  * Loads and parses data.
  * @public
  * @param {String} dataPath - Path to the data JSON.
- * @param {?Object} opts - Options.
+ * @param {Object} opts - Options.
  * @returns {Promise<Object>} Data.
  */
 module.exports = async function(dataPath, opts) {
 
 	const defaultData = {
-		environment: (opts != null && opts.optimize === true) ? 'prod' : 'dev'
+		environment: opts.optimize === true ? 'prod' : 'dev'
 	}
 
 	const globalData = (async () => {
 
-		const hasData = opts != null && opts.data != null
+		const hasData = opts.data != null
 		if (hasData === false) return {}
 
 		const mustRequire = typeof opts.data === 'string'
@@ -30,6 +30,9 @@ module.exports = async function(dataPath, opts) {
 	})()
 
 	const localData = (async () => {
+
+		const mustUseData = opts.localOverwrites !== false
+		if (mustUseData === false) return {}
 
 		const hasData = dataPath != null
 		if (hasData === false) return {}
