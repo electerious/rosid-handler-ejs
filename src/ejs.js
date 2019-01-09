@@ -12,8 +12,6 @@ const ejs = require('ejs')
  */
 module.exports = async function(filePath, str, data) {
 
-	if (str == null || str === '') return ''
-
 	return ejs.render(str, data, {
 		filename: filePath
 	})
