@@ -28,7 +28,7 @@
     "test": "nyc node_modules/mocha/bin/_mocha"
   },
   "dependencies": {
-    "continuous-stealthy-require": "^1.0.0",
+    "continuous-stealthy-require": "^2.0.0",
     "ejs": "^3.0.1",
     "locate-path": "^5.0.0",
     "require-data": "^1.0.0"
